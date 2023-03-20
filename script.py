@@ -10,11 +10,28 @@ data = np.zeros(VERTICE_COUNT, dtype=mesh.Mesh.dtype)
 cube = mesh.Mesh(data, remove_empty_areas=False)
 """
 
+fig = pyplot.figure()
+
+ax = fig.add_subplot(projection='3d')
+
+print("the vectors are: \n")
+for i in np.unique(cube.vectors, axis=0):    
+    print(i)
+    ax.scatter(i[0], i[1], i[2])
+
+for i in np.unique(cube.normals, axis=0):    
+    print(i)
+    ax.scatter(i[0], i[1], i[2])
+
+pyplot.show()
+
+
+
 points = np.around(np.unique(cube.vectors.reshape([int(cube.vectors.size/3), 3]), axis=0), 2)
 print ("Points are", points.tolist())
 
 
-
+"""
 figure = pyplot.figure()
 axes = figure.add_subplot(projection='3d')
 
@@ -24,7 +41,4 @@ scale = cube.points.flatten()
 axes.auto_scale_xyz(scale, scale, scale)
 
 pyplot.show()
-
-print(cube.v0)
-
-print("finish")
+"""
