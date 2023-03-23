@@ -5,6 +5,10 @@ from matplotlib import pyplot
 
 cube = mesh.Mesh.from_file('C:/Users/Bastian/Desktop/stl_test/plane.stl')
 """
+get cube data to manipulate 
+work with gcode to have nice finish 
+
+
 VERTICE_COUNT = 8
 data = np.zeros(VERTICE_COUNT, dtype=mesh.Mesh.dtype)
 cube = mesh.Mesh(data, remove_empty_areas=False)
