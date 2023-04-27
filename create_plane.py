@@ -1,0 +1,45 @@
+import numpy as np
+from stl import mesh
+from mpl_toolkits import mplot3d
+from matplotlib import pyplot
+import math
+
+
+def manipulate(points) -> list:
+    for point in points:
+        # dist =  math.sqrt(point[0]**2 + point[1]**2 + point[2]**2)
+    
+        point[1] = point[1] * point[0] * (-1)
+        point[2] = point[1] * point[0]
+
+    return points
+
+def create_points() -> list:
+    points = []
+    for i in range(0, 10):
+        fac = 0
+        for j in range(0, 10):
+            fac += 1
+            if j % 2  == 0: height = -0.1 - fac
+            else: height = 0.1 + fac
+            points.append([i, j, height])
+        
+    return points
+
+def main() -> None:
+    points = create_points()
+
+    # define graph
+    fig = pyplot.figure()
+    ax = fig.add_subplot(projection='3d')
+
+    # scatter points on graph
+    for i in points:    
+        print(i)
+        ax.scatter(i[0], i[1], i[2])
+
+    # shows the final graph
+    pyplot.show()
+
+if __name__ == '__main__':
+    main()
