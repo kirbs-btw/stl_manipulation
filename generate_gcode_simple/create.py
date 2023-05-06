@@ -1,3 +1,17 @@
+import numpy as np
+from stl import mesh
+
+
+def mid_part():
+    cube = mesh.Mesh.from_file('C:/Users/Bastian/Desktop/stl_test/plane.stl')
+
+    points = np.around(np.unique(cube.vectors.reshape([int(cube.vectors.size/3), 3]), axis=0), 2)
+
+    for i in points:    
+        print(i)
+
+    # generate code for movement
+
 
 def main():
 
