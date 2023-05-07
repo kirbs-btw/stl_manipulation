@@ -2,7 +2,11 @@ import numpy as np
 from stl import mesh
 
 
-def mid_part():
+def slice():
+    mov_points = []
+    extrusion = []
+    moves = []
+
     cube = mesh.Mesh.from_file('C:/Users/Bastian/Desktop/stl_test/plane.stl')
 
     points = np.around(np.unique(cube.vectors.reshape([int(cube.vectors.size/3), 3]), axis=0), 2)
@@ -12,7 +16,18 @@ def mid_part():
 
     # generate code for movement
 
+    # slice to 0.2mm layers
+    # (sort by hight) insert layer move points
+    # pick one point 
+    # pick next by sorting the layer points with distance
+    # go to next layer 
 
+    # convert list to movements 
+    for index, point in enumerate(mov_points):
+        line = "G1 X{} Y{} E{}".format(point[0], point[1], extrusion[index])
+        moves.append(line)
+
+    
 def main():
 
     content = []
