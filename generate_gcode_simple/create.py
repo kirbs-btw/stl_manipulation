@@ -1,18 +1,45 @@
 import numpy as np
 from stl import mesh
 
+def add_dim(points, x, y, z) ->list:
+    arr = []
+    for point in points:
+        point_x = point[0] * (x/2)
+        point_y = point[1] * (y/2)
+        point_z = point[2] * (z/2)
+        arr.append([point_x, point_y, point_z])
+
+    return arr
 
 def slice():
+    # dim 
+    x = 100
+    y = 100 
+    z = 100
+
     mov_points = []
     extrusion = []
     moves = []
 
-    cube = mesh.Mesh.from_file('C:/Users/Bastian/Desktop/stl_test/plane.stl')
+    cube = mesh.Mesh.from_file('H:/Projekte/Projekte/Project 137/stl_test/cube.stl')
 
     points = np.around(np.unique(cube.vectors.reshape([int(cube.vectors.size/3), 3]), axis=0), 2)
 
     for i in points:    
         print(i)
+
+    # create point ofsets to calc real position
+
+
+    # calc with dimensions of obj 
+
+    points = add_dim(points, x, y, z)
+    
+    # and printbed size
+
+    # position up with the smallest z 
+    #  
+
 
     # generate code for movement
 
@@ -53,4 +80,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    slice()
