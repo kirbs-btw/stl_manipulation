@@ -1,6 +1,21 @@
 import numpy as np
 from stl import mesh
 
+def find_min_z(points) -> float:
+    
+    z_values = [i[2] for i in points]
+    offset = min(z_values)
+
+    return offset
+
+def add_offset(points, offset) -> list:
+    arr = []
+
+    for i in points:
+        arr.append([i[0], i[1], (i[2] - offset)])
+
+    return arr
+
 def add_dim(points, x, y, z) ->list:
     arr = []
     for point in points:
@@ -28,8 +43,9 @@ def slice():
     for i in points:    
         print(i)
 
-    # create point ofsets to calc real position
-
+    # create point offsets to calc real position
+    offset = find_min_z(points)
+    points = add_offset(points, offset)
 
     # calc with dimensions of obj 
 
