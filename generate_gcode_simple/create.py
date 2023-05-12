@@ -16,7 +16,7 @@ def add_offset(points, offset) -> list:
 
     return arr
 
-def add_dim(points, x, y, z) ->list:
+def add_dim(points, x, y, z) -> list:
     arr = []
     for point in points:
         point_x = point[0] * (x/2)
@@ -26,11 +26,22 @@ def add_dim(points, x, y, z) ->list:
 
     return arr
 
+def add_bed_dim(points, bed_dim_x, bed_dim_y) -> list:
+    arr = []
+
+    for i in points:
+        arr.append([i[0] + (bed_dim_x/2), i[1] + (bed_dim_y/2), i[2]])
+
+    return arr
+
 def slice():
-    # dim 
-    x = 100
-    y = 100 
-    z = 100
+    # dim
+    x = 10
+    y = 10 
+    z = 10
+
+    bed_dim_x = 200
+    bed_dim_y = 200
 
     mov_points = []
     extrusion = []
@@ -43,19 +54,21 @@ def slice():
     for i in points:    
         print(i)
 
-    # create point offsets to calc real position
+    # position up with the smallest z 
+    
     offset = find_min_z(points)
     points = add_offset(points, offset)
 
-    # calc with dimensions of obj 
+    # add obj real dimensions
 
     points = add_dim(points, x, y, z)
-    
-    # and printbed size
 
-    # position up with the smallest z 
-    #  
+    # adjust for printbed size
 
+    points = add_bed_dim(points, bed_dim_x, bed_dim_y)
+
+    for i in points:
+        print(i)
 
     # generate code for movement
 
@@ -96,5 +109,4 @@ def main():
 
 
 if __name__ == '__main__':
-    # main()
     slice()
