@@ -34,6 +34,20 @@ def add_bed_dim(points, bed_dim_x, bed_dim_y) -> list:
 
     return arr
 
+def sort_points_by_height(points):
+    n = len(points)
+
+    swapped = False
+    
+    for i in range(n-1):
+        for j in range(0, n-i-1):
+            if points[j][2] > points[j + 1][2]:
+                swapped = True
+                points[j], points[j + 1] = points[j + 1], points[j]
+         
+        if not swapped: 
+            return
+
 def slice():
     # dim
     x = 10
@@ -73,7 +87,11 @@ def slice():
     # generate code for movement
 
     # slice to 0.2mm layers
-    # (sort by hight) insert layer move points
+    # (sort by hight) insert 
+    sort_points_by_height(points)
+
+    # layer move points
+
     # pick one point 
     # pick next by sorting the layer points with distance
     # go to next layer 
@@ -88,8 +106,6 @@ def main():
 
     content = []
     
-
-
     with open('H:/Projekte/Projekte/Project 137/stl_test/generate_gcode_simple/top_gcode.txt') as f:
         top = f.readlines()
 
