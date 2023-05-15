@@ -48,6 +48,14 @@ def sort_points_by_height(points):
         if not swapped: 
             return
 
+def insert_layer_shifts(points):
+    for i, j in enumerate(points):
+        try:
+            if points[i][0] != points[i+1][0]:
+                points.insert(i, "shift")
+        except:
+            pass
+        
 def slice():
     # dim
     x = 10
@@ -91,6 +99,8 @@ def slice():
     sort_points_by_height(points)
 
     # layer move points
+    insert_layer_shifts(points)
+    
 
     # pick one point 
     # pick next by sorting the layer points with distance
