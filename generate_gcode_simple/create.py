@@ -8,7 +8,8 @@ def find_min_z(points) -> float:
 
     return offset
 
-def add_offset(points, offset) -> list:
+def add_offset(points) -> list:
+    offset = find_min_z(points)
     arr = []
 
     for i in points:
@@ -70,27 +71,17 @@ def slice():
     moves = []
 
     cube = mesh.Mesh.from_file('H:/Projekte/Projekte/Project 137/stl_test/cube.stl')
-
+    # get points of mesh - relativ and not centert to printbed
     points = np.around(np.unique(cube.vectors.reshape([int(cube.vectors.size/3), 3]), axis=0), 2)
 
-    for i in points:    
-        print(i)
-
     # position up with the smallest z 
-    
-    offset = find_min_z(points)
-    points = add_offset(points, offset)
+    points = add_offset(points)
 
     # add obj real dimensions
-
     points = add_dim(points, x, y, z)
 
     # adjust for printbed size
-
     points = add_bed_dim(points, bed_dim_x, bed_dim_y)
-
-    for i in points:
-        print(i)
 
     # generate code for movement
 
