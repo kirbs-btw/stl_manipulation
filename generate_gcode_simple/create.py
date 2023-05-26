@@ -14,7 +14,7 @@ def add_offset(points) -> list:
 
     for i in points:
         arr.append([i[0], i[1], (i[2] - offset)])
-
+    
     return arr
 
 def add_dim(points, x, y, z) -> list:
@@ -49,28 +49,46 @@ def sort_points_by_height(points):
         if not swapped: 
             return
 
-def insert_layer_shifts(points):
+def insert_layer_shifts(points) -> list:
+    arr = []
     for i, j in enumerate(points):
         try:
-            if points[i][0] != points[i+1][0]:
-                points.insert(i, "shift")
+            arr.append(points[i])
+            if points[i][2] != points[i+1][2]:
+                arr.append("shift")
         except:
             pass
-        
-def slice():
+    return arr
+
+def generate_gcode(points) -> list:
+    extrusion = []
+    moves = []
+    moves.append("G0 Z0")
+    for index, point in enumerate(points):
+        if point == "shift":
+            line = "G0 Z{}\n;LAYER:{}".format(points[index+1][2], index+1)
+        else:
+            # line = "G1 X{} Y{} E{}".format(point[0], point[1], extrusion[index])
+            line = "G1 X{} Y{} E{}".format(point[0], point[1], 0)
+        moves.append(line)
+    
+    return moves
+
+def slice() -> list:
     # dim
-    x = 10
-    y = 10 
-    z = 10
+    x = 2.5
+    y = 2.5
+    z = 2.5
 
     bed_dim_x = 200
     bed_dim_y = 200
 
-    mov_points = []
-    extrusion = []
-    moves = []
+    stl_file = 'H:/Projekte/Projekte/Project 137/stl_test/generate_gcode_simple/stl/AppleWatchDock.stl'
+    # stl_file = 'H:/Projekte/Projekte/Project 137/stl_test/cube.stl'
 
-    cube = mesh.Mesh.from_file('H:/Projekte/Projekte/Project 137/stl_test/cube.stl')
+    cube = mesh.Mesh.from_file(stl_file)
+    # slice to 0.2mm layers
+
     # get points of mesh - relativ and not centert to printbed
     points = np.around(np.unique(cube.vectors.reshape([int(cube.vectors.size/3), 3]), axis=0), 2)
 
@@ -83,29 +101,29 @@ def slice():
     # adjust for printbed size
     points = add_bed_dim(points, bed_dim_x, bed_dim_y)
 
-    # generate code for movement
-
-    # slice to 0.2mm layers
     # (sort by hight) insert 
     sort_points_by_height(points)
 
     # layer move points
-    insert_layer_shifts(points)
-    
+    points = insert_layer_shifts(points)
+    for i in points:
+        print(i)
 
     # pick one point 
     # pick next by sorting the layer points with distance
     # go to next layer 
 
     # convert list to movements 
-    for index, point in enumerate(mov_points):
-        line = "G1 X{} Y{} E{}".format(point[0], point[1], extrusion[index])
-        moves.append(line)
+    moves = generate_gcode(points)
 
+    for i in moves:
+        print(i)
     
+    return moves
+
 def main():
 
-    content = []
+    content = slice()
     
     with open('H:/Projekte/Projekte/Project 137/stl_test/generate_gcode_simple/top_gcode.txt') as f:
         top = f.readlines()
@@ -119,11 +137,11 @@ def main():
         file.write(char)
 
     for char in content:
-        file.write(char)
+        file.write('\n{}'.format(char))
 
     for char in end:
         file.write(char)
 
 
 if __name__ == '__main__':
-    slice()
+    main()
