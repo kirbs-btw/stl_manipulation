@@ -1,5 +1,6 @@
 import numpy as np
 from stl import mesh
+import math
 
 def find_min_z(points) -> float:
     
@@ -61,18 +62,44 @@ def insert_layer_shifts(points) -> list:
     return arr
 
 def generate_gcode(points) -> list:
-    extrusion = []
+    extrusion = calc_extrusion(calc_dist(points), 0.2)
     moves = []
     moves.append("G0 Z0")
     for index, point in enumerate(points):
         if point == "shift":
             line = "G0 Z{}\n;LAYER:{}".format(points[index+1][2], index+1)
         else:
-            # line = "G1 X{} Y{} E{}".format(point[0], point[1], extrusion[index])
-            line = "G1 X{} Y{} E{}".format(point[0], point[1], 0)
+            line = "G1 X{} Y{} E{}".format(point[0], point[1], extrusion[index])
+    
         moves.append(line)
     
     return moves
+
+def calc_extrusion(dist, fac) -> list:
+    arr = []
+    
+    for i in dist:
+        arr.append((i*fac))
+    
+    added_arr = []
+    prev_arr = 0
+
+    for i in arr:
+        prev_arr += i
+        added_arr.append(prev_arr + i)
+
+    return added_arr
+
+
+def calc_dist(points) -> list:
+    dist_arr = []
+
+    for index, point in enumerate(points):
+        point_a = points[index]
+        point_b = points[index+1]
+        
+        dist = math.sqrt(((point_a[0] - point_b[0]) ** 2) + ((point_a[1] - point_b[1]) ** 2) + ((point_a[2] - point_b[2] ** 2)))
+    
 
 def slice() -> list:
     # dim
