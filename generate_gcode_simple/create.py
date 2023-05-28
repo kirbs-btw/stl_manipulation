@@ -65,8 +65,12 @@ def generate_gcode(points) -> list:
     extrusion = calc_extrusion(calc_dist(points), 0.2)
     moves = []
     moves.append("G0 Z0")
-    for index, point in enumerate(points):
-        if point == "shift":
+    points_with_shift = insert_layer_shifts(points)
+    max_int = len(points) - 1
+    for index, point in enumerate(points_with_shift):
+        if (index + 1) > max_int:
+            break
+        elif point == "shift":
             line = "G0 Z{}\n;LAYER:{}".format(points[index+1][2], index+1)
         else:
             line = "G1 X{} Y{} E{}".format(point[0], point[1], extrusion[index])
@@ -93,13 +97,23 @@ def calc_extrusion(dist, fac) -> list:
 
 def calc_dist(points) -> list:
     dist_arr = []
+    max_int = len(points) - 1
 
     for index, point in enumerate(points):
+        if (index + 1) > max_int:
+            break
         point_a = points[index]
         point_b = points[index+1]
         
-        dist = math.sqrt(((point_a[0] - point_b[0]) ** 2) + ((point_a[1] - point_b[1]) ** 2) + ((point_a[2] - point_b[2] ** 2)))
-    
+        a = (point_a[0] - point_b[0]) ** 2
+        b = (point_a[1] - point_b[1]) ** 2
+        c = (point_a[2] - point_b[2]) ** 2
+
+        dist = math.sqrt(a + b + c)
+        print(dist)
+        dist_arr.append(dist)
+
+    return dist_arr
 
 def slice() -> list:
     # dim
@@ -132,7 +146,7 @@ def slice() -> list:
     sort_points_by_height(points)
 
     # layer move points
-    points = insert_layer_shifts(points)
+    
     for i in points:
         print(i)
 
